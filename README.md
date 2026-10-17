@@ -168,22 +168,22 @@ All metrics are computed **strictly on newly generated tokens** (excluding the s
 ### Cross-Model Temperature Metrics Table (Averaged Over Seed Prompts, n = 3 per cell)
 | Architecture | Temp (T) | Distinct-1 (Unigrams) | Distinct-2 (Bigrams) | Trigram Repetition Rate | Longest Loop | Empirical Behaviour |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Simple RNN** | 0.2 | 0.552 | 0.686 | 23.2% | 0 words | Repetitive phrasing loops; repeats 'great difficulty of the time machine' |
-| **Simple RNN** | 0.5 | 0.657 | 0.912 | 1.0% | 0 words | Moderate fluency with local phrase repetition ('the patient of the morlocks') |
-| **Simple RNN** | 1.0 | 0.781 | 0.990 | 0.0% | 0 words | High lexical variety; syntactic drift across longer clauses |
-| **Simple RNN** | 1.5 | 0.952 | 1.000 | 0.0% | 0 words | Excessive entropy; severe syntactic breakdown and ungrammatical token sequences |
-| **Bidirectional RNN** | 0.2 | 0.514 | 0.745 | 11.1% | 3 words | Severe looping traps; repeats 'small of the morlocks, i saw' |
-| **Bidirectional RNN** | 0.5 | 0.619 | 0.892 | 2.0% | 0 words | Lively sci-fi phrasing ('a step of the lamp dimension the time traveller') |
-| **Bidirectional RNN** | 1.0 | 0.791 | 0.971 | 1.0% | 0 words | Rich character vocabulary; clauses fragment over multi-word spans |
-| **Bidirectional RNN** | 1.5 | 0.952 | 1.000 | 0.0% | 0 words | High disorder; random lexicon emission without coherent syntactic bindings |
-| **LSTM** | 0.2 | 0.438 | 0.539 | 37.4% | 0 words | Strict syntax; high repetition loops ('i was not a little of the time traveller') |
-| **LSTM** | **0.5** | **0.610** | **0.892** | **1.0%** | **0 words** | **Optimal narrative coherence; fluent story prose ('one of the world were the distance of the morlocks')** |
-| **LSTM** | 1.0 | 0.838 | 0.990 | 0.0% | 0 words | Imaginative lexical combinations ('felt to my camphor'); slight clause drift |
-| **LSTM** | 1.5 | 0.924 | 1.000 | 0.0% | 0 words | Entropy collapse; erratic word sequencing |
-| **GRU** | 0.2 | 0.514 | 0.735 | 12.1% | 3 words | Prone to phrase trapping; repeats 'palace of green porcelain' |
+| **Simple RNN** | 0.2 | 0.553 | 0.687 | 23.0% | 0 words | Repetitive phrasing loops; repeats 'great difficulty of the time machine' |
+| **Simple RNN** | 0.5 | 0.657 | 0.910 | 1.0% | 0 words | Moderate fluency with local phrase repetition ('the patient of the morlocks') |
+| **Simple RNN** | 1.0 | 0.780 | 0.990 | 0.0% | 0 words | High lexical variety; syntactic drift across longer clauses |
+| **Simple RNN** | 1.5 | 0.953 | 1.000 | 0.0% | 0 words | Excessive entropy; severe syntactic breakdown and ungrammatical token sequences |
+| **Bidirectional RNN** | 0.2 | 0.513 | 0.747 | 11.0% | 3 words | Severe looping traps; repeats 'small of the morlocks, i saw' |
+| **Bidirectional RNN** | 0.5 | 0.620 | 0.890 | 2.0% | 0 words | Lively sci-fi phrasing ('a step of the lamp dimension the time traveller') |
+| **Bidirectional RNN** | 1.0 | 0.790 | 0.970 | 1.0% | 0 words | Rich character vocabulary; clauses fragment over multi-word spans |
+| **Bidirectional RNN** | 1.5 | 0.950 | 1.000 | 0.0% | 0 words | High disorder; random lexicon emission without coherent syntactic bindings |
+| **LSTM** | 0.2 | 0.440 | 0.540 | 37.0% | 0 words | Strict syntax; high repetition loops ('i was not a little of the time traveller') |
+| **LSTM** | **0.5** | **0.610** | **0.890** | **1.0%** | **0 words** | **Optimal narrative coherence; fluent story prose ('one of the world were the distance of the morlocks')** |
+| **LSTM** | 1.0 | 0.840 | 0.990 | 0.0% | 0 words | Imaginative lexical combinations ('felt to my camphor'); slight clause drift |
+| **LSTM** | 1.5 | 0.923 | 1.000 | 0.0% | 0 words | Entropy collapse; erratic word sequencing |
+| **GRU** | 0.2 | 0.513 | 0.737 | 12.0% | 3 words | Prone to phrase trapping; repeats 'palace of green porcelain' |
 | **GRU** | **0.5** | **0.638** | **0.912** | **2.0%** | **0 words** | **Clean conversational fluency with near-zero repetition ('the place of the great hall was...')** |
-| **GRU** | 1.0 | 0.762 | 0.980 | 0.0% | 0 words | Diverse lexicon; minor grammatical degradation in dialogue tags |
-| **GRU** | 1.5 | 0.914 | 1.000 | 0.0% | 0 words | Unconstrained random sampling; complete loss of semantic and syntactic thread |
+| **GRU** | 1.0 | 0.760 | 0.980 | 0.0% | 0 words | Diverse lexicon; minor grammatical degradation in dialogue tags |
+| **GRU** | 1.5 | 0.910 | 1.000 | 0.0% | 0 words | Unconstrained random sampling; complete loss of semantic and syntactic thread |
 
 ---
 
@@ -210,13 +210,14 @@ All metrics are computed **strictly on newly generated tokens** (excluding the s
 1. **LSTM & GRU Lead the Benchmark**:
    - **LSTM** achieves the best validation loss (**4.2104**) and lowest validation perplexity (**67.38**), with strong held-out test Top-1 accuracy (**22.61%**) and Top-5 accuracy (**47.92%**).
    - **GRU** achieves the highest held-out test Top-1 accuracy (**23.10%**) and lowest test loss (**4.2105**), while requiring 9% fewer parameters (**1,367,913** vs. 1,499,497).
+   - **Single-Seed Consideration**: Experiments use a single fixed seed ($S=42$), so the narrow performance margin between LSTM (lower validation perplexity) and GRU (higher test accuracy and lower test loss) is within single-run variance; the LSTM/GRU gap is not statistically conclusive.
    - **Simple RNN** remains competitive in loss (**4.2870**) and perplexity (**72.75**), but exhibits higher vulnerability to vanishing gradients during extended sequence generation.
 2. **Bidirectional RNN Inductive Trade-off**:
    - Concatenating the forward final state $h_n[-2]$ and backward final state $h_n[-1]$ properly feeds the full sequence context to the classifier.
    - However, BiRNN's 1.72M parameters cause it to peak at epoch 2 (val loss 4.4202) before overfitting, confirming that backward parameters offer limited inductive advantage for causal word-level autoregressive generation on compact corpora.
 3. **Sampling Temperature & Empirical Coherence**:
    - $T = 0.5$ provides the optimal trade-off between lexical diversity (Distinct-1: 0.61–0.66, Distinct-2: 0.89–0.91) and structural stability, maintaining fluent narrative dialogue while keeping trigram repetition minimal (1.0%–2.0%).
-   - Lower temperatures ($T = 0.2$) suffer from severe repetition loops (LSTM reaches 37.4% repetition), while higher temperatures ($T = 1.5$) collapse into ungrammatical entropy.
+   - Lower temperatures ($T = 0.2$) suffer from severe repetition loops (LSTM reaches 37.0% repetition), while higher temperatures ($T = 1.5$) collapse into ungrammatical entropy.
 
 ---
 
