@@ -8,7 +8,7 @@ def create_notebook():
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "# Foundations of Generative AI (ICT4403) — Assignment 2\n",
+                    "# Foundations of Generative AI (ICT4403) - Assignment 2\n",
                     "## Autoregressive Next-Word Prediction & Multi-Temperature Text Generation System\n",
                     "### Comparative Analysis of Simple RNN, Bidirectional RNN, LSTM, and GRU\n",
                     "\n",

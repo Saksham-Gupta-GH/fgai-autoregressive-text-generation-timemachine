@@ -62,7 +62,7 @@ def build_submission_docx(
     
     sub = doc.add_paragraph()
     sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_sub = sub.add_run("Assignment 2 – Submission Details")
+    run_sub = sub.add_run("Assignment 2 - Submission Details")
     run_sub.font.name = 'Times New Roman'
     run_sub.font.size = Pt(13)
     
@@ -77,7 +77,7 @@ def build_submission_docx(
     meta_rows = [
         ("Student name", student_name, None),
         ("Registration number", reg_num, None),
-        ("Assignment title", "Foundations of Generative AI (ICT4403) – Assignment 2", None),
+        ("Assignment title", "Foundations of Generative AI (ICT4403) - Assignment 2", None),
         ("Title of the developed autoregressive text-generation system", "Comparative Word-Level Autoregressive Text Generation on H. G. Wells' The Time Machine using Simple RNN, Bidirectional RNN, LSTM, and GRU", None),
         ("Dataset name", "The Time Machine by H. G. Wells (Project Gutenberg eBook #35)", None),
         ("Dataset link", "", "https://www.gutenberg.org/files/35/35-0.txt"),

@@ -1,4 +1,4 @@
-# Foundations of Generative AI (ICT4403) — Assignment 2
+# Foundations of Generative AI (ICT4403) - Assignment 2
 ## Autoregressive Next-Word Prediction & Multi-Temperature Text Generation System: Comparative Study of Simple RNN, Bidirectional RNN, LSTM, and GRU
 
 ---
@@ -6,9 +6,9 @@
 ### Student Details
 - **Student Name:** Saksham Gupta
 - **Registration Number:** 230911186
-- **Assignment Title:** Foundations of Generative AI (ICT4403) – Assignment 2
+- **Assignment Title:** Foundations of Generative AI (ICT4403) - Assignment 2
 - **System Title:** Comparative Word-Level Autoregressive Text Generation on H. G. Wells' *The Time Machine* using Simple RNN, Bidirectional RNN, LSTM, and GRU
-- **Dataset Name & Source:** *The Time Machine* (H. G. Wells) — [Project Gutenberg #35](https://www.gutenberg.org/files/35/35-0.txt)
+- **Dataset Name & Source:** *The Time Machine* (H. G. Wells) - [Project Gutenberg #35](https://www.gutenberg.org/files/35/35-0.txt)
 - **GitHub Repository Link:** [https://github.com/Saksham-Gupta-GH/fgai-autoregressive-text-generation-timemachine](https://github.com/Saksham-Gupta-GH/fgai-autoregressive-text-generation-timemachine)
 
 ---
@@ -159,9 +159,9 @@ During autoregressive decoding, next-token probabilities are modulated by temper
 $$P(w_{t} = i) = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}$$
 
 We evaluated all four architectures across three distinct seed prompts at four temperatures ($T \in \{0.2, 0.5, 1.0, 1.5\}$):
-- **Seed 1 (Training Text)**: *"the time traveller was expounding a recondite matter to us"* (Chapter 1 opening — tests training-set narrative recall).
-- **Seed 2 (Held-out Test Text)**: *"all this will be absolutely incredible to you but to me"* (Chapter 16 — tests continuation on unseen test text).
-- **Seed 3 (Validation Text)**: *"i stepped through the bronze frame and up to the time machine"* (Chapter 13 — tests continuation on validation text).
+- **Seed 1 (Training Text)**: *"the time traveller was expounding a recondite matter to us"* (Chapter 1 opening - tests training-set narrative recall).
+- **Seed 2 (Held-out Test Text)**: *"all this will be absolutely incredible to you but to me"* (Chapter 16 - tests continuation on unseen test text).
+- **Seed 3 (Validation Text)**: *"i stepped through the bronze frame and up to the time machine"* (Chapter 13 - tests continuation on validation text).
 
 All metrics are computed **strictly on newly generated tokens** (excluding the seed prompt) and averaged across seed prompts ($n = 3$ generations per cell):
 
