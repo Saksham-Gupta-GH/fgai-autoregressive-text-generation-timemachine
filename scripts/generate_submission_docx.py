@@ -90,7 +90,7 @@ def build_submission_docx(
     meta_rows = [
         ("Student Name", student_name, None),
         ("Registration Number", reg_num, None),
-        ("Assignment Title", "Assignment 2 - Autoregressive Text Generation using Simple RNN, Bidirectional RNN, LSTM and GRU", None),
+        ("Assignment Title", "Assignment 2: Autoregressive Text Generation using Simple RNN, Bidirectional RNN, LSTM and GRU", None),
         ("Title of the Developed System", "Comparative Word-Level Autoregressive Text Generation on H. G. Wells' The Time Machine using Simple RNN, Bidirectional RNN, LSTM, and GRU", None),
         ("Dataset Name", "The Time Machine by H. G. Wells (Project Gutenberg eBook #35)", None),
         ("Dataset Link", "", "https://www.gutenberg.org/files/35/35-0.txt"),
