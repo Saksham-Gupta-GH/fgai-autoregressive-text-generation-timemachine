@@ -128,7 +128,7 @@ All four models were trained for 8 epochs on Apple Silicon MPS. Because recurren
 
 ### Model Comparison Table (Best-Epoch & Test Set)
 | Architecture | Trainable Parameters | Best Epoch | Best Val Loss | Best Val PPL | Val Top-1 Acc | Val Top-5 Acc | Test Loss | Test Top-1 Acc | Test Top-5 Acc | Total Time (s) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Simple RNN** | 1,104,745 | 4 | 4.2870 | 72.75 | 22.86% | 47.41% | 4.2835 | 21.91% | 46.63% | 33.5s |
 | **Bidirectional RNN** | 1,721,961 | 2 | 4.4202 | 83.11 | 20.14% | 46.03% | 4.3641 | 20.57% | 45.60% | 37.0s |
 | **LSTM** 🏆 | 1,499,497 | 4 | **4.2104** | **67.38** | **22.88%** | 48.16% | 4.2156 | 22.61% | 47.92% | 33.1s |
