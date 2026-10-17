@@ -9,7 +9,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 
-def add_docx_hyperlink(paragraph, url, text, color="0066CC", underline=True):
+def add_docx_hyperlink(paragraph, url, text, color="1155CC", underline=True):
     """Inserts an active clickable hyperlink into a python-docx paragraph."""
     part = paragraph.part
     r_id = part.relate_to(url, RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
@@ -40,17 +40,22 @@ def build_submission_docx(
 ):
     doc = Document()
     
-    # Margins
+    # Standard 1.0-inch margins matching Google Docs default
     for section in doc.sections:
-        section.top_margin = Inches(1.2)
-        section.bottom_margin = Inches(1.2)
+        section.top_margin = Inches(1.0)
+        section.bottom_margin = Inches(1.0)
         section.left_margin = Inches(1.0)
         section.right_margin = Inches(1.0)
+        
+    style = doc.styles['Normal']
+    style.font.name = 'Times New Roman'
+    style.font.size = Pt(10.5)
         
     # Title
     title = doc.add_paragraph()
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run_title = title.add_run("Foundations of Generative AI (ICT4403)")
+    run_title.font.name = 'Times New Roman'
     run_title.font.size = Pt(18)
     run_title.font.bold = True
     run_title.font.color.rgb = RGBColor(0, 0, 0)
@@ -58,12 +63,14 @@ def build_submission_docx(
     sub = doc.add_paragraph()
     sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run_sub = sub.add_run("Assignment 2 – Submission Details")
+    run_sub.font.name = 'Times New Roman'
     run_sub.font.size = Pt(13)
     
-    doc.add_paragraph().paragraph_format.space_after = Pt(20)
+    doc.add_paragraph().paragraph_format.space_after = Pt(16)
     
-    # Metadata Table (7 Rows matching reference structure)
+    # Metadata Table with clean Table Grid borders
     table = doc.add_table(rows=7, cols=2)
+    table.style = 'Table Grid'
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     table.autofit = False
     
