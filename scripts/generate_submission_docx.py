@@ -50,6 +50,17 @@ def build_submission_docx(
     style = doc.styles['Normal']
     style.font.name = 'Times New Roman'
     style.font.size = Pt(10.5)
+
+    # Institutional Header Logo
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(script_dir)
+    image_path = os.path.join(repo_root, "images.jpeg")
+    if os.path.exists(image_path):
+        p_img = doc.add_paragraph()
+        p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_img.paragraph_format.space_after = Pt(16)
+        run_img = p_img.add_run()
+        run_img.add_picture(image_path, width=Inches(4.8))
         
     # Title
     title = doc.add_paragraph()
