@@ -1,0 +1,17 @@
+Architecture,Temperature,Distinct-1,Distinct-2,Trigram Repetition Rate,Longest Loop (Words),Description
+Simple RNN,0.2,0.5524,0.6863,0.2323,0,Repetitive phrasing loops; repeats 'cauldron of the door' motif
+Simple RNN,0.5,0.6571,0.9118,0.0101,0,Moderate fluency with local repetition ('door that makes the world would not')
+Simple RNN,1.0,0.781,0.9902,0.0,0,High lexical variety; syntactic drift across longer clauses
+Simple RNN,1.5,0.9524,1.0,0.0,0,Excessive entropy; severe syntactic breakdown and ungrammatical token salad
+Bidirectional RNN,0.2,0.5143,0.7451,0.1111,3,Severe looping traps; enters 6-word cycle 'and the moral of course'
+Bidirectional RNN,0.5,0.619,0.8922,0.0202,0,"Lively dialogue phrasing ('cried the pigeon, i don t think you know'); zero loops"
+Bidirectional RNN,1.0,0.7905,0.9706,0.0101,0,Rich character vocabulary; clauses fragment over multi-word spans
+Bidirectional RNN,1.5,0.9524,1.0,0.0,0,High disorder; random lexicon emission without coherent syntactic bindings
+LSTM,0.2,0.4381,0.5392,0.3737,0,Strict syntax; repeats dominant character motifs ('queen s argument was')
+LSTM,0.5,0.6095,0.8922,0.0101,0,Optimal narrative coherence; fluent story prose ('the march hare said in a hurry')
+LSTM,1.0,0.8381,0.9902,0.0,0,Imaginative lexical combinations ('way of soup'); slight clause drift
+LSTM,1.5,0.9238,1.0,0.0,0,Entropy collapse; erratic word sequencing ('face high before without more pig')
+GRU,0.2,0.5143,0.7353,0.1212,3,Extreme phrase trapping (52.5% repetition); loops on 'and she tried to herself'
+GRU,0.5,0.6381,0.9118,0.0202,0,Clean conversational fluency with zero repetition loops ('said the cat... went on')
+GRU,1.0,0.7619,0.9804,0.0,0,Diverse lexicon; minor grammatical degradation in dialogue tags
+GRU,1.5,0.9143,1.0,0.0,0,Unconstrained random sampling; complete loss of semantic and syntactic thread

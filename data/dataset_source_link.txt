@@ -1,0 +1,9 @@
+Dataset Name: The Time Machine
+Author: H. G. Wells
+Publication Date: 1895
+Language: English
+Source: Project Gutenberg
+Source URL: https://www.gutenberg.org/files/35/35-0.txt
+eBook Number: #35
+Format: Plain Text UTF-8
+Description: A foundational science fiction novella exploring fourth-dimensional travel, societal divergence, and future temporal mechanics.

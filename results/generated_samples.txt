@@ -1,0 +1,187 @@
+================================================================================
+AUTOREGRESSIVE TEXT GENERATION - TEMPERATURE INFLUENCE ANALYSIS
+DATASET: THE TIME MACHINE (H. G. WELLS)
+================================================================================
+
+
+######################################################################
+SEED PROMPT: "the time traveller was expounding a recondite matter to us"
+######################################################################
+
+
+--- Model: Simple RNN ---
+[T = 0.2] -> the time traveller was expounding a recondite matter to us. i had a match. i had a great difficulty of the time machine. i had a great difficulty of the time machine, and went out of the future. i had
+          (Distinct-1: 0.46, Distinct-2: 0.56, Trigram Repeat Rate: 0.33, Longest Loop: 0 words)
+
+[T = 0.5] -> the time traveller was expounding a recondite matter to us the time machine, with the great hall, and i had a most of the day. the first i had the to be calm the patient of the morlocks, i had a
+          (Distinct-1: 0.60, Distinct-2: 0.88, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> the time traveller was expounding a recondite matter to us in unfamiliar, i said, one moment in the hill thing had been short complete. and the difference began hazy, and every looking in passed him. he said the roof of
+          (Distinct-1: 0.74, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> the time traveller was expounding a recondite matter to us them still centre be seem glimpse vividly my nearest solstice plausible under a great do are excessively array import half suppose that left century new white great means ve hill passionate: needs therewith learnt
+          (Distinct-1: 0.97, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: Bidirectional RNN ---
+[T = 0.2] -> the time traveller was expounding a recondite matter to us a minute. i felt a minute, i saw a step was a small of the morlocks, i saw no longer of the machine, and the morlocks, i saw, i
+          (Distinct-1: 0.49, Distinct-2: 0.74, Trigram Repeat Rate: 0.12, Longest Loop: 0 words)
+
+[T = 0.5] -> the time traveller was expounding a recondite matter to us a step of the lamp dimension the time traveller. i could see the time machine? i was not in the time machine, i tried to get a was of the world.
+          (Distinct-1: 0.63, Distinct-2: 0.88, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> the time traveller was expounding a recondite matter to us, suppose, find off it stone. i tried to perfect, said the explanation? merged, sat, bearing, i stared him arms attitude, their place, said the sun
+          (Distinct-1: 0.71, Distinct-2: 0.94, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.5] -> the time traveller was expounding a recondite matter to us and thousand smothered ruinous and heel going away, i ever looked near broad short fancied serenity. above country very clear iron i looked upper my head at clad looking of these shadow that
+          (Distinct-1: 0.91, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: LSTM ---
+[T = 0.2] -> the time traveller was expounding a recondite matter to us. i was not a little of the time traveller, and i was not a little way, and i was not a little of the time traveller, and i was so much
+          (Distinct-1: 0.43, Distinct-2: 0.47, Trigram Repeat Rate: 0.48, Longest Loop: 0 words)
+
+[T = 0.5] -> the time traveller was expounding a recondite matter to us one of the world were the distance of the morlocks. then, i had the same odd, and the morlocks had not been a little way, and i was not a little
+          (Distinct-1: 0.60, Distinct-2: 0.88, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> the time traveller was expounding a recondite matter to us. i felt to my camphor. then i am iron going followed to find them, i get eyes to myself. it was so standing childish the present problem therewith and displayed the
+          (Distinct-1: 0.80, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> the time traveller was expounding a recondite matter to us forth. things large class yet taken, nor body among reach fruits five might curiously of animal always expense at medical over which kept sometimes animal right shining in looking rose into remote seven
+          (Distinct-1: 0.97, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: GRU ---
+[T = 0.2] -> the time traveller was expounding a recondite matter to us. i was very large, and the little people of the palace of green porcelain, and i was still to be, and the little people, and the machine, and the
+          (Distinct-1: 0.51, Distinct-2: 0.71, Trigram Repeat Rate: 0.15, Longest Loop: 0 words)
+
+[T = 0.5] -> the time traveller was expounding a recondite matter to us, and then i began to tell it. i was not for a first i saw the place of the great hall was a different of a fear, and i began to myself
+          (Distinct-1: 0.66, Distinct-2: 0.91, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> the time traveller was expounding a recondite matter to us aluminium. they were vanished, though verification, regarding the arms, the strength of the bronze conditions creatures museum. however, said filby. i was smiling, and i came at
+          (Distinct-1: 0.74, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> the time traveller was expounding a recondite matter to us notice away, and moment that well safe to them with edge some new but pair at these things rhododendrons security me smiling to difficulties end to the eye would easily alone before the left
+          (Distinct-1: 0.91, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+######################################################################
+SEED PROMPT: "all this will be absolutely incredible to you but to me"
+######################################################################
+
+
+--- Model: Simple RNN ---
+[T = 0.2] -> all this will be absolutely incredible to you but to me, and then i had got to be explicit and the morlocks i had seen in the great hall, and then i had not been the great hall, and then i felt a
+          (Distinct-1: 0.54, Distinct-2: 0.68, Trigram Repeat Rate: 0.24, Longest Loop: 0 words)
+
+[T = 0.5] -> all this will be absolutely incredible to you but to me, and i was in my ears. i had been to be explicit to put the morlocks, and that was only to be that the time traveller. i saw a blaze,
+          (Distinct-1: 0.66, Distinct-2: 0.91, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> all this will be absolutely incredible to you but to me, within they were seeking plausible one of the candle, i lit those circular that showed voices, to put to the time machine, and kissing the fashion, in some, in
+          (Distinct-1: 0.74, Distinct-2: 0.97, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> all this will be absolutely incredible to you but to me came back at there would received, these read round the wings, the grey have graceful peculiar and put different hither since all running come felt after masses before, came physical sticks generation
+          (Distinct-1: 0.89, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: Bidirectional RNN ---
+[T = 0.2] -> all this will be absolutely incredible to you but to me, i saw, i saw, i went, i was a little people, i saw to judge that i could not a little of the machine, i was no longer of
+          (Distinct-1: 0.51, Distinct-2: 0.71, Trigram Repeat Rate: 0.15, Longest Loop: 3 words)
+
+[T = 0.5] -> all this will be absolutely incredible to you but to me, but at last i was to enough, i saw the right of the earth. the big flickered man, i saw, the time machine, that i had come into the
+          (Distinct-1: 0.66, Distinct-2: 0.94, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> all this will be absolutely incredible to you but to me again. i did so, was indeed had anticipated more. so i remembered to you a little still stay began little be about the last towards any rise, too number on the
+          (Distinct-1: 0.83, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> all this will be absolutely incredible to you but to me well grew necessary fast in curiosity; brown creatures all to myself and under started rest one! cried we verify recall fro discoveries have broken memory passion staying seemed aisle in space? and
+          (Distinct-1: 0.94, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: LSTM ---
+[T = 0.2] -> all this will be absolutely incredible to you but to me, and i was not a little of the time traveller. i was not a little of the little people, and the same soft of the little people, and the little people
+          (Distinct-1: 0.43, Distinct-2: 0.56, Trigram Repeat Rate: 0.33, Longest Loop: 0 words)
+
+[T = 0.5] -> all this will be absolutely incredible to you but to me, and how it was a most of our own time, and in the end, i was not the time traveller, and that i was for the time traveller. there was
+          (Distinct-1: 0.60, Distinct-2: 0.85, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> all this will be absolutely incredible to you but to me, and yet upon the dark, ever she within be into among that it has in their eyes age to once, for any last, instead, is only to than the vapour
+          (Distinct-1: 0.83, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> all this will be absolutely incredible to you but to me under moving through their grave of than bright inadequacy. tomorrow population were pause future to particular how hours last slowly places, said the attained, the heads along thing as ages through the
+          (Distinct-1: 0.89, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: GRU ---
+[T = 0.2] -> all this will be absolutely incredible to you but to me that i was not the time traveller, and the machine, and the earth had been. i was not to the time machine. i was not a word, and i was
+          (Distinct-1: 0.49, Distinct-2: 0.71, Trigram Repeat Rate: 0.12, Longest Loop: 0 words)
+
+[T = 0.5] -> all this will be absolutely incredible to you but to me, but i was clutched to tell you. the medical man, and then i began to the lamp. i was so much. i was with a large of a human in
+          (Distinct-1: 0.69, Distinct-2: 0.91, Trigram Repeat Rate: 0.03, Longest Loop: 0 words)
+
+[T = 1.0] -> all this will be absolutely incredible to you but to me her her in her noticed. but as i will say you you i thought, of that second we was the worn. but he cracked gold wrong on that came inhuman to the
+          (Distinct-1: 0.77, Distinct-2: 0.97, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> all this will be absolutely incredible to you but to me closed dust, but with splendid waste them minute again that then, there camphor in into overworld darkness! my fancy dimensions devoted great large ventilation from some harsh watched in my gestures struck
+          (Distinct-1: 0.91, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+######################################################################
+SEED PROMPT: "i stepped through the bronze frame and up to the time machine"
+######################################################################
+
+
+--- Model: Simple RNN ---
+[T = 0.2] -> i stepped through the bronze frame and up to the time machine, and then i had seen in the future. the sun was very great hall, and then i had a certain sense of the time machine, and then, as i could
+          (Distinct-1: 0.66, Distinct-2: 0.82, Trigram Repeat Rate: 0.12, Longest Loop: 0 words)
+
+[T = 0.5] -> i stepped through the bronze frame and up to the time machine. it s plain enough. i could not see the world i had a great hall at the time traveller. it was to be on the machine. so that i could see
+          (Distinct-1: 0.71, Distinct-2: 0.94, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> i stepped through the bronze frame and up to the time machine had a great hope of our round received i gravitation my first about that explained twenty within doors from the matter indeed. i don t know about, but the thames, which i
+          (Distinct-1: 0.86, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> i stepped through the bronze frame and up to the time machine length apparently huge little lawn to expounding what s needs changing sometimes absence even its colour has came parapet me? have rushed seat the increase hours tired was mechanism clear calm weena simple dust
+          (Distinct-1: 1.00, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: Bidirectional RNN ---
+[T = 0.2] -> i stepped through the bronze frame and up to the time machine, i saw, i saw a step of them. i felt a peculiar of the morlocks, i saw no longer of the machine, i thought, i tried to the time
+          (Distinct-1: 0.54, Distinct-2: 0.79, Trigram Repeat Rate: 0.06, Longest Loop: 3 words)
+
+[T = 0.5] -> i stepped through the bronze frame and up to the time machine, for a peculiar of a thud. i had come. i, i saw a little lawn, i, no doubt, i went, i have a certain of the morlocks
+          (Distinct-1: 0.57, Distinct-2: 0.85, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> i stepped through the bronze frame and up to the time machine, in the hand of my pocket in the physical. there with a slow of a mile had entered all me on, and yet i recognised keep of any rate world to be
+          (Distinct-1: 0.83, Distinct-2: 0.97, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> i stepped through the bronze frame and up to the time machine let the strong rain him between presence your thing convey that closing purple which greatly might in fire her could dazzled. on building, quite notice believe weena lay well of slope against unreal
+          (Distinct-1: 1.00, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: LSTM ---
+[T = 0.2] -> i stepped through the bronze frame and up to the time machine, and i was so much to the little people, and i was a little of the time traveller, and i was so much to the time machine, and i was not
+          (Distinct-1: 0.46, Distinct-2: 0.59, Trigram Repeat Rate: 0.30, Longest Loop: 0 words)
+
+[T = 0.5] -> i stepped through the bronze frame and up to the time machine, and i felt a little of a man, but i saw, but the floor of it was coming. i was not the hill to get. i thought of the eloi
+          (Distinct-1: 0.63, Distinct-2: 0.94, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> i stepped through the bronze frame and up to the time machine, and even my mind down for the world. we are no longer ideas of four light, laid you with a gap foot to hear far no near! for the inevitable in
+          (Distinct-1: 0.89, Distinct-2: 0.97, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> i stepped through the bronze frame and up to the time machine than care animal as people widening, but even the seventeen line of the place into comfortable yellow i remember very hand! reference was full as it seemed to our own at ever,
+          (Distinct-1: 0.91, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+
+--- Model: GRU ---
+[T = 0.2] -> i stepped through the bronze frame and up to the time machine. i was not to the lawn. i was not a small, and then, and then i saw the white sphinx. the palace of the time traveller, and i was
+          (Distinct-1: 0.54, Distinct-2: 0.79, Trigram Repeat Rate: 0.09, Longest Loop: 3 words)
+
+[T = 0.5] -> i stepped through the bronze frame and up to the time machine, and the white of the earth. the thing was not a most. i could not know how it was, in a second, and i was not more, and in
+          (Distinct-1: 0.57, Distinct-2: 0.91, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.0] -> i stepped through the bronze frame and up to the time machine, as i could rose as i heard her, and by a confidence mind of presently as his space must be built of the i breathing myself. still nevertheless i put breathing upon
+          (Distinct-1: 0.77, Distinct-2: 0.97, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)
+
+[T = 1.5] -> i stepped through the bronze frame and up to the time machine lay through their few seen none, i had among melodious chill round to me will where refuge being habit i, as i say you just these fruits brown with reach. the attained
+          (Distinct-1: 0.91, Distinct-2: 1.00, Trigram Repeat Rate: 0.00, Longest Loop: 0 words)

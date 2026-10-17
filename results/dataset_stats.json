@@ -1,0 +1,58 @@
+{
+    "total_characters": 179698,
+    "total_tokens": 37254,
+    "total_lines": 3174,
+    "unique_raw_tokens": 4617,
+    "vocab_size": 1897,
+    "avg_words_per_line": 11.737240075614366,
+    "top_10_words": [
+        [
+            "the",
+            2282
+        ],
+        [
+            ",",
+            2250
+        ],
+        [
+            ".",
+            1804
+        ],
+        [
+            "i",
+            1267
+        ],
+        [
+            "and",
+            1245
+        ],
+        [
+            "of",
+            1162
+        ],
+        [
+            "a",
+            819
+        ],
+        [
+            "to",
+            684
+        ],
+        [
+            "was",
+            550
+        ],
+        [
+            "in",
+            546
+        ]
+    ],
+    "train_tokens": 29804,
+    "val_tokens": 3725,
+    "test_tokens": 3725,
+    "train_sequences": 29798,
+    "val_sequences": 3719,
+    "test_sequences": 3719,
+    "test_unk_count": 460,
+    "test_unk_rate_percent": 12.37
+}

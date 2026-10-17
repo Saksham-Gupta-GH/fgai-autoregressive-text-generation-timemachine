@@ -1,0 +1,5 @@
+Architecture,Parameters,Best Epoch,Best Val Loss,Best Val Perplexity,Val Top-1 Accuracy (%),Val Top-5 Accuracy (%),Test Loss,Test Top-1 Accuracy (%),Test Top-5 Accuracy (%),Total Time (s)
+Simple RNN,1104745,4,4.287,72.75,22.86,47.41,4.2835,21.91,46.63,33.5
+Bidirectional RNN,1721961,2,4.4202,83.11,20.14,46.03,4.3641,20.57,45.6,37.0
+LSTM,1499497,4,4.2104,67.38,22.88,48.16,4.2156,22.61,47.92,33.1
+GRU,1367913,3,4.2388,69.33,22.29,48.24,4.2105,23.1,48.48,34.7

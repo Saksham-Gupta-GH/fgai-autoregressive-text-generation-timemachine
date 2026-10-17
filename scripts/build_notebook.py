@@ -1,0 +1,531 @@
+import json
+import os
+
+def create_notebook():
+    nb = {
+        "cells": [
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "# Foundations of Generative AI (ICT4403) — Assignment 2\n",
+                    "## Autoregressive Next-Word Prediction & Multi-Temperature Text Generation System\n",
+                    "### Comparative Analysis of Simple RNN, Bidirectional RNN, LSTM, and GRU\n",
+                    "\n",
+                    "---\n",
+                    "**Student Details:**\n",
+                    "- **Name:** Saksham Gupta\n",
+                    "- **Registration Number:** 230911186\n",
+                    "- **Repository:** `https://github.com/Saksham-Gupta-GH/fgai-autoregressive-text-generation-timemachine`\n",
+                    "\n",
+                    "---\n",
+                    "### Assignment Objectives\n",
+                    "1. **Preprocessing & Leakage Prevention:** Preprocess H. G. Wells' *The Time Machine*, split data **chronologically** (80% Train, 10% Validation, 10% Test), fit vocabulary strictly on training tokens, and construct sliding-window $([w_{t-k}, \\dots, w_{t-1}] \\to w_t)$ sequences.\n",
+                    "2. **Recurrent Model Architectures:** Implement four recurrent language models in PyTorch (**Simple RNN, Bidirectional RNN, LSTM, and GRU**) under strictly comparable experimental conditions.\n",
+                    "3. **Rigorous Evaluation:** Record training/validation curves, track **best-epoch validation metrics** (to guard against overfitting), and evaluate best checkpoints on the unseen test set for Cross-Entropy Loss, Perplexity ($\\exp(\\mathcal{L})$), Top-1 Accuracy, and Top-5 Accuracy.\n",
+                    "4. **Temperature-Based Autoregressive Generation:** Sample text across multiple temperatures ($T \\in \\{0.2, 0.5, 1.0, 1.5\\}$) from identical seed prompts, computing Distinct-1, Distinct-2, and Trigram Repetition Rates on newly generated tokens."
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 1. Environment Setup & Hardware Acceleration"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "import os\n",
+                    "import re\n",
+                    "import time\n",
+                    "import math\n",
+                    "import json\n",
+                    "from collections import Counter\n",
+                    "\n",
+                    "import torch\n",
+                    "import torch.nn as nn\n",
+                    "import torch.nn.functional as F\n",
+                    "from torch.utils.data import Dataset, DataLoader\n",
+                    "import numpy as np\n",
+                    "import matplotlib.pyplot as plt\n",
+                    "\n",
+                    "# Set random seed for strict reproducibility across all runs\n",
+                    "SEED = 42\n",
+                    "torch.manual_seed(SEED)\n",
+                    "np.random.seed(SEED)\n",
+                    "\n",
+                    "# Auto-detect compute hardware: Apple Silicon MPS, NVIDIA CUDA, or CPU\n",
+                    "if torch.backends.mps.is_available():\n",
+                    "    device = torch.device('mps')\n",
+                    "elif torch.cuda.is_available():\n",
+                    "    device = torch.device('cuda')\n",
+                    "else:\n",
+                    "    device = torch.device('cpu')\n",
+                    "print(f\"Active compute device: {device}\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 2. Dataset Acquisition & Characterization\n",
+                    "We use H. G. Wells' **The Time Machine** (Project Gutenberg, eBook #35), providing clean, modern grammatical prose and dialogic phrasing."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "DATA_PATH = '../data/the_time_machine.txt' if os.path.exists('../data/the_time_machine.txt') else 'data/the_time_machine.txt'\n",
+                    "\n",
+                    "with open(DATA_PATH, 'r', encoding='utf-8') as f:\n",
+                    "    raw_text = f.read()\n",
+                    "\n",
+                    "# Strip Gutenberg legal preamble\n",
+                    "start_m = re.search(r'\\*\\*\\* START OF [^\\*]*\\*\\*\\*', raw_text, re.IGNORECASE)\n",
+                    "if start_m:\n",
+                    "    raw_text = raw_text[start_m.end():]\n",
+                    "end_m = re.search(r'\\*\\*\\* END OF [^\\*]*\\*\\*\\*', raw_text, re.IGNORECASE)\n",
+                    "if end_m:\n",
+                    "    raw_text = raw_text[:end_m.start()]\n",
+                    "raw_text = raw_text.strip()\n",
+                    "\n",
+                    "print(f\"Raw text length: {len(raw_text):,} characters\")\n",
+                    "print(f\"Total lines: {len(raw_text.splitlines()):,}\")\n",
+                    "print(\"\\n--- First 300 characters excerpt ---\")\n",
+                    "print(raw_text[:300])"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "### 2.1 Tokenization & Train-Only Vocabulary Construction\n",
+                    "To strictly prevent data leakage, the vocabulary is built **solely on the training tokens**. Words appearing in validation or test sets that were not seen during training are mapped to `<unk>`."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "tokens = re.findall(r\"\\b\\w+(?:'\\w+)?|[.,!?:;]\", raw_text.lower())\n",
+                    "print(f\"Total extracted word tokens: {len(tokens):,}\")\n",
+                    "\n",
+                    "# Chronological split (80% Train, 10% Validation, 10% Test)\n",
+                    "train_end = int(len(tokens) * 0.8)\n",
+                    "val_end = int(len(tokens) * 0.9)\n",
+                    "\n",
+                    "train_tokens = tokens[:train_end]\n",
+                    "val_tokens = tokens[train_end:val_end]\n",
+                    "test_tokens = tokens[val_end:]\n",
+                    "\n",
+                    "print(f\"Train tokens: {len(train_tokens):,} | Val tokens: {len(val_tokens):,} | Test tokens: {len(test_tokens):,}\")\n",
+                    "\n",
+                    "class Vocabulary:\n",
+                    "    def __init__(self, pad_token='<pad>', unk_token='<unk>'):\n",
+                    "        self.pad_token = pad_token\n",
+                    "        self.unk_token = unk_token\n",
+                    "        self.word2idx = {}\n",
+                    "        self.idx2word = {}\n",
+                    "        self.pad_idx = self.add_word(self.pad_token)\n",
+                    "        self.unk_idx = self.add_word(self.unk_token)\n",
+                    "\n",
+                    "    def add_word(self, word):\n",
+                    "        if word not in self.word2idx:\n",
+                    "            idx = len(self.word2idx)\n",
+                    "            self.word2idx[word] = idx\n",
+                    "            self.idx2word[idx] = word\n",
+                    "            return idx\n",
+                    "        return self.word2idx[word]\n",
+                    "\n",
+                    "    def build_from_words(self, words, min_freq=1, max_vocab_size=3000):\n",
+                    "        counter = Counter(words)\n",
+                    "        most_common = counter.most_common(max_vocab_size - len(self.word2idx))\n",
+                    "        for word, count in most_common:\n",
+                    "            if count >= min_freq:\n",
+                    "                self.add_word(word)\n",
+                    "\n",
+                    "    def __len__(self):\n",
+                    "        return len(self.word2idx)\n",
+                    "\n",
+                    "    def word_to_idx(self, word):\n",
+                    "        return self.word2idx.get(word, self.unk_idx)\n",
+                    "\n",
+                    "    def idx_to_word(self, idx):\n",
+                    "        return self.idx2word.get(idx, self.unk_token)\n",
+                    "\n",
+                    "    def encode(self, words):\n",
+                    "        return [self.word_to_idx(w) for w in words]\n",
+                    "\n",
+                    "    def decode(self, indices):\n",
+                    "        return [self.idx_to_word(idx) for idx in indices]\n",
+                    "\n",
+                    "vocab = Vocabulary()\n",
+                    "vocab.build_from_words(train_tokens, min_freq=2, max_vocab_size=3000)\n",
+                    "print(f\"Vocabulary Size: {len(vocab):,} unique tokens (fit strictly on training set)\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "### 2.2 Word Frequency Distribution"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "counter = Counter(train_tokens)\n",
+                    "top_25 = counter.most_common(25)\n",
+                    "words, counts = zip(*top_25)\n",
+                    "\n",
+                    "plt.figure(figsize=(12, 4))\n",
+                    "plt.bar(words, counts, color='#2b5c8f')\n",
+                    "plt.xticks(rotation=45, ha='right')\n",
+                    "plt.title(\"Top 25 Most Frequent Tokens in Training Corpus\")\n",
+                    "plt.ylabel(\"Frequency\")\n",
+                    "plt.grid(axis='y', linestyle='--', alpha=0.5)\n",
+                    "plt.tight_layout()\n",
+                    "plt.show()"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "### 2.3 Chronological Sliding-Window Sequence Construction\n",
+                    "Each sequence contains 6 context words mapped to 1 target word. Sequences are generated independently for each split to ensure zero token leakage across splits."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "SEQ_LENGTH = 6\n",
+                    "BATCH_SIZE = 64\n",
+                    "\n",
+                    "class TextSequenceDataset(Dataset):\n",
+                    "    def __init__(self, token_indices, seq_length=6):\n",
+                    "        self.inputs = []\n",
+                    "        self.targets = []\n",
+                    "        for i in range(len(token_indices) - seq_length):\n",
+                    "            self.inputs.append(token_indices[i : i + seq_length])\n",
+                    "            self.targets.append(token_indices[i + seq_length])\n",
+                    "        self.inputs = torch.tensor(self.inputs, dtype=torch.long)\n",
+                    "        self.targets = torch.tensor(self.targets, dtype=torch.long)\n",
+                    "\n",
+                    "    def __len__(self):\n",
+                    "        return len(self.targets)\n",
+                    "\n",
+                    "    def __getitem__(self, idx):\n",
+                    "        return self.inputs[idx], self.targets[idx]\n",
+                    "\n",
+                    "train_dataset = TextSequenceDataset(vocab.encode(train_tokens), seq_length=SEQ_LENGTH)\n",
+                    "val_dataset = TextSequenceDataset(vocab.encode(val_tokens), seq_length=SEQ_LENGTH)\n",
+                    "test_dataset = TextSequenceDataset(vocab.encode(test_tokens), seq_length=SEQ_LENGTH)\n",
+                    "\n",
+                    "train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)\n",
+                    "val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)\n",
+                    "test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)\n",
+                    "\n",
+                    "print(f\"Train Sequences : {len(train_dataset):,} ({len(train_loader)} batches)\")\n",
+                    "print(f\"Val Sequences   : {len(val_dataset):,} ({len(val_loader)} batches)\")\n",
+                    "print(f\"Test Sequences  : {len(test_dataset):,} ({len(test_loader)} batches)\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 3. Recurrent Architectures (Simple RNN, BiRNN, LSTM, GRU)\n",
+                    "All four models share identical hyperparameters:\n",
+                    "- **Embedding Dimension**: 256\n",
+                    "- **Hidden Dimension**: 256\n",
+                    "- **Dropout**: 0.25\n",
+                    "- **Optimizer**: Adam (lr=0.001)\n",
+                    "- **Loss Function**: Cross-Entropy Loss\n",
+                    "\n",
+                    "> **BiRNN Note:** Bidirectionality is implemented by concatenating the forward final state `h_n[-2]` (encoding $0 \\to T-1$) and backward final state `h_n[-1]` (encoding $T-1 \\to 0$). This ensures the backward branch processes the entire input sequence."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "class SimpleRNNLM(nn.Module):\n",
+                    "    def __init__(self, vocab_size, embedding_dim=256, hidden_dim=256, dropout=0.25):\n",
+                    "        super().__init__()\n",
+                    "        self.name = \"Simple RNN\"\n",
+                    "        self.embedding = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)\n",
+                    "        self.rnn = nn.RNN(embedding_dim, hidden_dim, batch_first=True)\n",
+                    "        self.dropout = nn.Dropout(dropout)\n",
+                    "        self.fc = nn.Linear(hidden_dim, vocab_size)\n",
+                    "\n",
+                    "    def forward(self, x):\n",
+                    "        embeds = self.embedding(x)\n",
+                    "        out, h_n = self.rnn(embeds)\n",
+                    "        return self.fc(self.dropout(out[:, -1, :]))\n",
+                    "\n",
+                    "class BiRNNLM(nn.Module):\n",
+                    "    def __init__(self, vocab_size, embedding_dim=256, hidden_dim=256, dropout=0.25):\n",
+                    "        super().__init__()\n",
+                    "        self.name = \"Bidirectional RNN\"\n",
+                    "        self.embedding = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)\n",
+                    "        self.rnn = nn.RNN(embedding_dim, hidden_dim, batch_first=True, bidirectional=True)\n",
+                    "        self.dropout = nn.Dropout(dropout)\n",
+                    "        self.fc = nn.Linear(hidden_dim * 2, vocab_size)\n",
+                    "\n",
+                    "    def forward(self, x):\n",
+                    "        embeds = self.embedding(x)\n",
+                    "        out, h_n = self.rnn(embeds)\n",
+                    "        # Concatenate forward final state (tokens 0 -> T-1) and backward final state (tokens T-1 -> 0)\n",
+                    "        bidir_repr = torch.cat([h_n[-2], h_n[-1]], dim=-1)\n",
+                    "        return self.fc(self.dropout(bidir_repr))\n",
+                    "\n",
+                    "class LSTMLM(nn.Module):\n",
+                    "    def __init__(self, vocab_size, embedding_dim=256, hidden_dim=256, dropout=0.25):\n",
+                    "        super().__init__()\n",
+                    "        self.name = \"LSTM\"\n",
+                    "        self.embedding = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)\n",
+                    "        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)\n",
+                    "        self.dropout = nn.Dropout(dropout)\n",
+                    "        self.fc = nn.Linear(hidden_dim, vocab_size)\n",
+                    "\n",
+                    "    def forward(self, x):\n",
+                    "        embeds = self.embedding(x)\n",
+                    "        out, (h_n, c_n) = self.lstm(embeds)\n",
+                    "        return self.fc(self.dropout(out[:, -1, :]))\n",
+                    "\n",
+                    "class GRULM(nn.Module):\n",
+                    "    def __init__(self, vocab_size, embedding_dim=256, hidden_dim=256, dropout=0.25):\n",
+                    "        super().__init__()\n",
+                    "        self.name = \"GRU\"\n",
+                    "        self.embedding = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)\n",
+                    "        self.gru = nn.GRU(embedding_dim, hidden_dim, batch_first=True)\n",
+                    "        self.dropout = nn.Dropout(dropout)\n",
+                    "        self.fc = nn.Linear(hidden_dim, vocab_size)\n",
+                    "\n",
+                    "    def forward(self, x):\n",
+                    "        embeds = self.embedding(x)\n",
+                    "        out, h_n = self.gru(embeds)\n",
+                    "        return self.fc(self.dropout(out[:, -1, :]))\n",
+                    "\n",
+                    "# Instantiate each architecture to verify layers and parameter count\n",
+                    "for model_cls, name in [(SimpleRNNLM, 'Simple RNN'), (BiRNNLM, 'Bidirectional RNN'), (LSTMLM, 'LSTM'), (GRULM, 'GRU')]:\n",
+                    "    m = model_cls(vocab_size=len(vocab), embedding_dim=256, hidden_dim=256, dropout=0.25)\n",
+                    "    params = sum(p.numel() for p in m.parameters() if p.requires_grad)\n",
+                    "    print(f'Instantiated {name:<18}: {params:,} parameters')"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 4. Controlled Training Loop with Best-Checkpoint Preservation"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "def evaluate_split(model, dataloader, criterion, device=device):\n",
+                    "    model.eval()\n",
+                    "    running_loss, correct_top1, correct_top5, total = 0.0, 0, 0, 0\n",
+                    "    with torch.no_grad():\n",
+                    "        for x_b, y_b in dataloader:\n",
+                    "            x_b, y_b = x_b.to(device), y_b.to(device)\n",
+                    "            logits = model(x_b)\n",
+                    "            loss = criterion(logits, y_b)\n",
+                    "            running_loss += loss.item() * x_b.size(0)\n",
+                    "            preds = torch.argmax(logits, dim=-1)\n",
+                    "            correct_top1 += (preds == y_b).sum().item()\n",
+                    "            top5 = torch.topk(logits, k=min(5, logits.size(-1)), dim=-1).indices\n",
+                    "            correct_top5 += (top5 == y_b.unsqueeze(-1)).any(dim=-1).sum().item()\n",
+                    "            total += y_b.size(0)\n",
+                    "    v_loss = running_loss / total\n",
+                    "    v_top1 = correct_top1 / total\n",
+                    "    v_top5 = correct_top5 / total\n",
+                    "    v_ppl = math.exp(min(v_loss, 20))\n",
+                    "    return v_loss, v_top1, v_top5, v_ppl\n",
+                    "\n",
+                    "print(\"Evaluation helper ready.\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 5. Quantitative Results & Comparative Analysis\n",
+                    "We display the verified results from the experimental run, reporting **best-epoch validation metrics** and **unseen test-set evaluation**."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "RESULTS_MD = '../results/quantitative_results.md' if os.path.exists('../results/quantitative_results.md') else 'results/quantitative_results.md'\n",
+                    "if os.path.exists(RESULTS_MD):\n",
+                    "    with open(RESULTS_MD, 'r') as f:\n",
+                    "        print(f.read())\n",
+                    "else:\n",
+                    "    print(\"Results markdown not found. Run 'python3 run_experiments.py' first.\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "### 5.1 Learning Curves (Training & Validation Loss)"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "HIST_JSON = '../results/metrics_history.json' if os.path.exists('../results/metrics_history.json') else 'results/metrics_history.json'\n",
+                    "if os.path.exists(HIST_JSON):\n",
+                    "    with open(HIST_JSON, 'r') as f:\n",
+                    "        histories = json.load(f)\n",
+                    "    \n",
+                    "    fig, axes = plt.subplots(1, 2, figsize=(14, 5))\n",
+                    "    for name, h in histories.items():\n",
+                    "        epochs = range(1, len(h['train_loss']) + 1)\n",
+                    "        axes[0].plot(epochs, h['train_loss'], label=name, linewidth=2)\n",
+                    "        axes[1].plot(epochs, h['val_loss'], label=name, linewidth=2)\n",
+                    "        \n",
+                    "    axes[0].set_title(\"Training Loss across Epochs\", fontweight=\"bold\")\n",
+                    "    axes[0].set_xlabel(\"Epoch\")\n",
+                    "    axes[0].set_ylabel(\"Loss\")\n",
+                    "    axes[0].grid(True, linestyle=\"--\", alpha=0.5)\n",
+                    "    axes[0].legend()\n",
+                    "    \n",
+                    "    axes[1].set_title(\"Validation Loss across Epochs\", fontweight=\"bold\")\n",
+                    "    axes[1].set_xlabel(\"Epoch\")\n",
+                    "    axes[1].set_ylabel(\"Loss\")\n",
+                    "    axes[1].grid(True, linestyle=\"--\", alpha=0.5)\n",
+                    "    axes[1].legend()\n",
+                    "    plt.tight_layout()\n",
+                    "    plt.show()"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 6. Multi-Temperature Autoregressive Text Generation\n",
+                    "Autoregressively generating text token-by-token using temperature-scaled softmax multinomial sampling:\n",
+                    "$$P(w_t = i) = \\frac{\\exp(z_i / T)}{\\sum_j \\exp(z_j / T)}$$\n",
+                    "We measure **Distinct-1**, **Distinct-2**, and **Trigram Repetition Rate** strictly on the **newly generated tokens**."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "def sample_with_temperature(logits, temperature=1.0):\n",
+                    "    if temperature <= 1e-4:\n",
+                    "        return torch.argmax(logits, dim=-1).item()\n",
+                    "    probs = F.softmax(logits / temperature, dim=-1)\n",
+                    "    return torch.multinomial(probs, 1).item()\n",
+                    "\n",
+                    "def generate(model, seed_text, max_tokens=30, temperature=1.0, seq_len=6):\n",
+                    "    model.eval()\n",
+                    "    words = re.findall(r\"\\b\\w+(?:'\\w+)?|[.,!?:;]\", seed_text.lower())\n",
+                    "    gen_words = list(words)\n",
+                    "    with torch.no_grad():\n",
+                    "        for _ in range(max_tokens):\n",
+                    "            ctx = gen_words[-seq_len:]\n",
+                    "            enc = vocab.encode(ctx)\n",
+                    "            if len(enc) < seq_len:\n",
+                    "                enc = [vocab.pad_idx] * (seq_len - len(enc)) + enc\n",
+                    "            inp = torch.tensor([enc], dtype=torch.long).to(device)\n",
+                    "            logits = model(inp).squeeze(0)\n",
+                    "            logits[vocab.pad_idx] = -float('inf')\n",
+                    "            logits[vocab.unk_idx] = -float('inf')\n",
+                    "            next_idx = sample_with_temperature(logits, temperature)\n",
+                    "            gen_words.append(vocab.idx_to_word(next_idx))\n",
+                    "    return ' '.join(gen_words)\n",
+                    "\n",
+                    "print(\"Autoregressive generation function ready.\")"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "### 6.1 Sample Generations from Saved Checkpoints across Temperatures"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "CKPT = '../results/lstm_best.pt' if os.path.exists('../results/lstm_best.pt') else 'results/lstm_best.pt'\n",
+                    "if os.path.exists(CKPT):\n",
+                    "    demo_model = LSTMLM(vocab_size=len(vocab), embedding_dim=256, hidden_dim=256, dropout=0.25).to(device)\n",
+                    "    demo_model.load_state_dict(torch.load(CKPT, map_location=device))\n",
+                    "    demo_model.eval()\n",
+                    "    \n",
+                    "    seed = 'the time traveller was expounding a recondite matter to us'\n",
+                    "    print(f\"Seed: '{seed}'\\n\")\n",
+                    "    for t in [0.2, 0.5, 1.0, 1.5]:\n",
+                    "        out = generate(demo_model, seed, max_tokens=30, temperature=t, seq_len=6)\n",
+                    "        print(f\"[T = {t:3.1f}] -> {out}\\n\")"
+                ]
+            }
+        ],
+        "metadata": {
+            "kernelspec": {
+                "display_name": "Python 3",
+                "language": "python",
+                "name": "python3"
+            },
+            "language_info": {
+                "codemirror_mode": {
+                    "name": "ipython",
+                    "version": 3
+                },
+                "file_extension": ".py",
+                "mimetype": "text/x-python",
+                "name": "python",
+                "nbformat": 4,
+                "nbformat_minor": 2,
+                "version": "3.9.6"
+            }
+        },
+        "nbformat": 4,
+        "nbformat_minor": 2
+    }
+    
+    os.makedirs("notebooks", exist_ok=True)
+    with open("notebooks/text_generation_assignment2.ipynb", "w") as f:
+        json.dump(nb, f, indent=2)
+    print("Created notebooks/text_generation_assignment2.ipynb")
+
+if __name__ == "__main__":
+    create_notebook()
