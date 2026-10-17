@@ -88,13 +88,13 @@ Logits -> Next-Word Probability Distribution
 1. **Simple RNN**: Relies on hyperbolic tangent recurrent updates $h_t = \tanh(W x_t + U h_{t-1} + b)$. Parameters: **1,104,745**.
 2. **Bidirectional RNN**: Processes the 6-token context window in both forward ($0 \to T-1$) and backward ($T-1 \to 0$) directions. The representation combines the forward final state $h_n[-2]$ with the backward final state $h_n[-1]$ (`torch.cat([h_n[-2], h_n[-1]], dim=-1)`). Parameters: **1,721,961**.  
    *Observation*: Due to its 1.72M parameters on a compact corpus, BiRNN reaches its optimal validation loss early (epoch 2) before exhibiting overfitting.  
-   > **Theoretical Limitation**: A Bidirectional RNN cannot strictly perform causal left-to-right autoregressive generation, because the backward hidden state at position $t$ depends on future tokens $x_{t+1}, \dots, x_T$ — violating the autoregressive requirement $p_\theta(x_t \mid x_{<t})$. However, because generation here operates over a **fixed 6-token sliding window** of already-generated tokens, the BiRNN encodes the last 6 already-generated tokens in both directions; it never sees future tokens, so generation remains left-to-right.
+   > **Theoretical Limitation**: A Bidirectional RNN cannot strictly perform causal left-to-right autoregressive generation, because the backward hidden state at position $t$ depends on future tokens $x_{t+1}, \dots, x_T$ - violating the autoregressive requirement $p_\theta(x_t \mid x_{<t})$. However, because generation here operates over a **fixed 6-token sliding window** of already-generated tokens, the BiRNN encodes the last 6 already-generated tokens in both directions; it never sees future tokens, so generation remains left-to-right.
 3. **LSTM**: Employs gating mechanisms (Forget gate $f_t$, Input gate $i_t$, Output gate $o_t$) and an additive cell state $c_t$ to preserve temporal dependencies across sequence steps. Parameters: **1,499,497**.
 4. **GRU**: Streamlines memory tracking into two gates (Reset $r_t$ and Update $z_t$), balancing representational expressiveness with fewer parameters (**1,367,913**).
 
 ### Training Strategy: Teacher Forcing
 
-Each training example is a pre-built 6-token ground-truth window paired with one next-word target. The model reads the real text window and predicts one next word, with loss computed on that single output. Training inputs are always **real text windows** (equivalent to teacher forcing at the window level). At generation time the model feeds on its own previously sampled tokens, which can accumulate errors — this gap is known as **exposure bias** and contributes to the repetition loops and syntactic drift observed at lower temperatures.
+Each training example is a pre-built 6-token ground-truth window paired with one next-word target. The model reads the real text window and predicts one next word, with loss computed on that single output. Training inputs are always **real text windows** (equivalent to teacher forcing at the window level). At generation time the model feeds on its own previously sampled tokens, which can accumulate errors - this gap is known as **exposure bias** and contributes to the repetition loops and syntactic drift observed at lower temperatures.
 
 ---
 
@@ -170,7 +170,7 @@ After training, all models generate text one token at a time using the following
 5. Sample the next token: $\hat{x}_t \sim \text{softmax}(\text{logits} / T)$
 6. Append $\hat{x}_t$ to the sequence and repeat from step 2 until the target length is reached.
 
-Generation is inherently **sequential** — each newly sampled token is appended to the context before the next prediction is made. The model re-encodes the full 6-token window at every step (no hidden state is carried between steps).
+Generation is inherently **sequential** - each newly sampled token is appended to the context before the next prediction is made. The model re-encodes the full 6-token window at every step (no hidden state is carried between steps).
 
 ### Temperature Scaling
 
@@ -235,7 +235,7 @@ All metrics are computed **strictly on newly generated tokens** (excluding the s
    - Concatenating the forward final state $h_n[-2]$ and backward final state $h_n[-1]$ properly feeds the full sequence context to the classifier.
    - However, BiRNN's 1.72M parameters cause it to peak at epoch 2 (val loss 4.4202) before overfitting, confirming that backward parameters offer limited inductive advantage for causal word-level autoregressive generation on compact corpora.
 3. **Sampling Temperature & Empirical Coherence**:
-   - $T = 0.5$ provides the optimal trade-off between lexical diversity (Distinct-1: 0.61–0.66, Distinct-2: 0.89–0.91) and structural stability, maintaining fluent narrative dialogue while keeping trigram repetition minimal (1.0%–2.0%).
+   - $T = 0.5$ provides the optimal trade-off between lexical diversity (Distinct-1: 0.61-0.66, Distinct-2: 0.89-0.91) and structural stability, maintaining fluent narrative dialogue while keeping trigram repetition minimal (1.0%-2.0%).
    - Lower temperatures ($T = 0.2$) suffer from severe repetition loops (LSTM reaches 37.0% repetition), while higher temperatures ($T = 1.5$) collapse into ungrammatical entropy.
 
 ---
