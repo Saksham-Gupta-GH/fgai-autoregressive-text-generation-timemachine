@@ -55,12 +55,12 @@ The core objectives of this assignment are:
 ## 3. Architecture Descriptions
 
 All models are implemented in PyTorch and share an identical structure:
-- **Embedding Layer**: $\text{Embedding}(1897, 256, \text{padding\_idx}=0)$
-- **Recurrent Core**: 256 units (Simple RNN / BiRNN / LSTM / GRU)
-- **Regularization**: Dropout ($p=0.25$) and Gradient Clipping ($\text{norm}=1.0$)
-- **Classification Head**: $\text{Linear}(H \to 1897)$ (or $2H \to 1897$ for BiRNN)
-- **Optimizer**: Adam ($\text{lr}=10^{-3}$)
-- **Criterion**: Cross-Entropy Loss
+- **Embedding Layer**: `nn.Embedding(1897, 256, padding_idx=0)`
+- **Recurrent Core**: 256 hidden units (Simple RNN / BiRNN / LSTM / GRU)
+- **Regularization**: Dropout ($p = 0.25$) and Gradient Clipping (`max_norm = 1.0`)
+- **Classification Head**: `nn.Linear(H, 1897)` where $H = 256$ (or $2H = 512$ for BiRNN)
+- **Optimizer**: Adam (`lr = 1e-3`)
+- **Criterion**: Cross-Entropy Loss (`nn.CrossEntropyLoss()`)
 
 ```
 Input Tokens: [w1, w2, ..., w6]
