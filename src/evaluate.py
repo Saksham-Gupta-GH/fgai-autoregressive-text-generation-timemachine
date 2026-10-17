@@ -175,25 +175,25 @@ def format_cross_model_temperature_table(generation_summary, save_dir="results")
     csv_rows = []
     
     model_temp_descriptions = {
-        ("Simple RNN", 0.2): "Repetitive phrasing loops; repeats 'cauldron of the door' motif",
-        ("Simple RNN", 0.5): "Moderate fluency with local repetition ('door that makes the world would not')",
-        ("Simple RNN", 1.0): "High lexical variety; syntactic drift across longer clauses",
-        ("Simple RNN", 1.5): "Excessive entropy; severe syntactic breakdown and ungrammatical token salad",
+        ("Simple RNN", 0.2): "Repetitive phrasing loops; repeats 'great difficulty of the time machine' motif",
+        ("Simple RNN", 0.5): "Moderate fluency with local repetition ('in the great hall... patient of the morlocks')",
+        ("Simple RNN", 1.0): "High lexical variety; syntactic drift across longer clauses ('the difference began hazy')",
+        ("Simple RNN", 1.5): "Excessive entropy; severe syntactic breakdown and ungrammatical token salad ('solstice plausible under a great do')",
         
-        ("Bidirectional RNN", 0.2): "Severe looping traps; enters 6-word cycle 'and the moral of course'",
-        ("Bidirectional RNN", 0.5): "Lively dialogue phrasing ('cried the pigeon, i don t think you know'); zero loops",
-        ("Bidirectional RNN", 1.0): "Rich character vocabulary; clauses fragment over multi-word spans",
-        ("Bidirectional RNN", 1.5): "High disorder; random lexicon emission without coherent syntactic bindings",
+        ("Bidirectional RNN", 0.2): "Local looping traps; enters repetitive cadence ('i saw, i saw, i went, i was a little people')",
+        ("Bidirectional RNN", 0.5): "Sci-fi narrative phrasing ('the lamp dimension the time traveller... flickered man'); low repetition",
+        ("Bidirectional RNN", 1.0): "Rich vocabulary; clauses fragment over multi-word spans ('merged, sat, bearing, i stared him arms')",
+        ("Bidirectional RNN", 1.5): "High disorder; random lexicon emission without coherent syntactic bindings ('smothered ruinous and heel going away')",
         
-        ("LSTM", 0.2): "Strict syntax; repeats dominant character motifs ('queen s argument was')",
-        ("LSTM", 0.5): "Optimal narrative coherence; fluent story prose ('the march hare said in a hurry')",
-        ("LSTM", 1.0): "Imaginative lexical combinations ('way of soup'); slight clause drift",
-        ("LSTM", 1.5): "Entropy collapse; erratic word sequencing ('face high before without more pig')",
+        ("LSTM", 0.2): "Strict syntax; repeats dominant character motifs ('i was not a little of the time traveller')",
+        ("LSTM", 0.5): "Optimal narrative coherence; fluent Victorian sci-fi prose ('the morlocks had not been a little way')",
+        ("LSTM", 1.0): "Imaginative lexical combinations ('felt to my camphor... iron going followed'); slight clause drift",
+        ("LSTM", 1.5): "Entropy collapse; erratic word sequencing ('forth things large class yet taken nor body among reach')",
         
-        ("GRU", 0.2): "Extreme phrase trapping (52.5% repetition); loops on 'and she tried to herself'",
-        ("GRU", 0.5): "Clean conversational fluency with zero repetition loops ('said the cat... went on')",
-        ("GRU", 1.0): "Diverse lexicon; minor grammatical degradation in dialogue tags",
-        ("GRU", 1.5): "Unconstrained random sampling; complete loss of semantic and syntactic thread"
+        ("GRU", 0.2): "Phrase trapping; loops on recurring narrative motifs ('people of the palace of green porcelain')",
+        ("GRU", 0.5): "Clean conversational sci-fi fluency with zero repetition loops ('medical man, and then i began to the lamp')",
+        ("GRU", 1.0): "Diverse lexicon; minor grammatical degradation in descriptive clauses ('cracked gold wrong on that came inhuman')",
+        ("GRU", 1.5): "Unconstrained random sampling; complete loss of semantic and syntactic thread ('fancy dimensions devoted great large ventilation')"
     }
     
     for key, metrics_list in generation_summary.items():

@@ -1,17 +1,17 @@
 Architecture,Temperature,Distinct-1,Distinct-2,Trigram Repetition Rate,Longest Loop (Words),Description
-Simple RNN,0.2,0.5524,0.6863,0.2323,0,Repetitive phrasing loops; repeats 'cauldron of the door' motif
-Simple RNN,0.5,0.6571,0.9118,0.0101,0,Moderate fluency with local repetition ('door that makes the world would not')
-Simple RNN,1.0,0.781,0.9902,0.0,0,High lexical variety; syntactic drift across longer clauses
-Simple RNN,1.5,0.9524,1.0,0.0,0,Excessive entropy; severe syntactic breakdown and ungrammatical token salad
-Bidirectional RNN,0.2,0.5143,0.7451,0.1111,3,Severe looping traps; enters 6-word cycle 'and the moral of course'
-Bidirectional RNN,0.5,0.619,0.8922,0.0202,0,"Lively dialogue phrasing ('cried the pigeon, i don t think you know'); zero loops"
-Bidirectional RNN,1.0,0.7905,0.9706,0.0101,0,Rich character vocabulary; clauses fragment over multi-word spans
-Bidirectional RNN,1.5,0.9524,1.0,0.0,0,High disorder; random lexicon emission without coherent syntactic bindings
-LSTM,0.2,0.4381,0.5392,0.3737,0,Strict syntax; repeats dominant character motifs ('queen s argument was')
-LSTM,0.5,0.6095,0.8922,0.0101,0,Optimal narrative coherence; fluent story prose ('the march hare said in a hurry')
-LSTM,1.0,0.8381,0.9902,0.0,0,Imaginative lexical combinations ('way of soup'); slight clause drift
-LSTM,1.5,0.9238,1.0,0.0,0,Entropy collapse; erratic word sequencing ('face high before without more pig')
-GRU,0.2,0.5143,0.7353,0.1212,3,Extreme phrase trapping (52.5% repetition); loops on 'and she tried to herself'
-GRU,0.5,0.6381,0.9118,0.0202,0,Clean conversational fluency with zero repetition loops ('said the cat... went on')
-GRU,1.0,0.7619,0.9804,0.0,0,Diverse lexicon; minor grammatical degradation in dialogue tags
-GRU,1.5,0.9143,1.0,0.0,0,Unconstrained random sampling; complete loss of semantic and syntactic thread
+Simple RNN,0.2,0.5533,0.6867,0.23,0,Repetitive phrasing loops; repeats 'great difficulty of the time machine' motif
+Simple RNN,0.5,0.6567,0.91,0.01,0,Moderate fluency with local repetition ('in the great hall... patient of the morlocks')
+Simple RNN,1.0,0.78,0.99,0.0,0,High lexical variety; syntactic drift across longer clauses ('the difference began hazy')
+Simple RNN,1.5,0.9533,1.0,0.0,0,Excessive entropy; severe syntactic breakdown and ungrammatical token salad ('solstice plausible under a great do')
+Bidirectional RNN,0.2,0.5133,0.7467,0.11,3,"Local looping traps; enters repetitive cadence ('i saw, i saw, i went, i was a little people')"
+Bidirectional RNN,0.5,0.62,0.89,0.02,0,Sci-fi narrative phrasing ('the lamp dimension the time traveller... flickered man'); low repetition
+Bidirectional RNN,1.0,0.79,0.97,0.01,0,"Rich vocabulary; clauses fragment over multi-word spans ('merged, sat, bearing, i stared him arms')"
+Bidirectional RNN,1.5,0.95,1.0,0.0,0,High disorder; random lexicon emission without coherent syntactic bindings ('smothered ruinous and heel going away')
+LSTM,0.2,0.44,0.54,0.37,0,Strict syntax; repeats dominant character motifs ('i was not a little of the time traveller')
+LSTM,0.5,0.61,0.89,0.01,0,Optimal narrative coherence; fluent Victorian sci-fi prose ('the morlocks had not been a little way')
+LSTM,1.0,0.84,0.99,0.0,0,Imaginative lexical combinations ('felt to my camphor... iron going followed'); slight clause drift
+LSTM,1.5,0.9233,1.0,0.0,0,Entropy collapse; erratic word sequencing ('forth things large class yet taken nor body among reach')
+GRU,0.2,0.5133,0.7367,0.12,3,Phrase trapping; loops on recurring narrative motifs ('people of the palace of green porcelain')
+GRU,0.5,0.64,0.91,0.02,0,"Clean conversational sci-fi fluency with zero repetition loops ('medical man, and then i began to the lamp')"
+GRU,1.0,0.76,0.98,0.0,0,Diverse lexicon; minor grammatical degradation in descriptive clauses ('cracked gold wrong on that came inhuman')
+GRU,1.5,0.91,1.0,0.0,0,Unconstrained random sampling; complete loss of semantic and syntactic thread ('fancy dimensions devoted great large ventilation')
